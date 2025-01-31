@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Reto Ganchos</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <script type="text/babel">
+
+        function Tarjeta({ nombre, desc }) {
+
+            return (
+                <div className='componente-tarjeta'>
+                    <h4>{nombre}</h4>
+                    <p>{desc}</p>
+                </div>
+            )
+
+        }
+
+        function usePeticion(url) {
+            const [usuarios, setUsuarios] = React.useState([]);
+
+            React.useEffect(
+                () => {
+                    obtenerDatos();
+                }
+                , []);
+
+            const obtenerDatos = async () => {
+                const resultado = await fetch(url);
+                const datos = await resultado.json();
+                setUsuarios(datos);
+            }
+
+            return [usuarios, setUsuarios];
+
+        }
+
+
+        function App() {
+
+            const [usuarios, setUsuarios] = usePeticion('https://jsonplaceholder.typicode.com/users/');
+
+            return (
+                <div className='principal'>
+                    <h2>Lista de Usuarios</h2>
+                    <div className='componente-tarjetas'>
+                        {usuarios.map(usuario =>
+                            <Tarjeta key={usuario.id} nombre={usuario.name} desc={usuario.company.catchPhrase} />
+                        )}
+
+                    </div>
+                </div>
+            )
+
+        }
+
+        const raiz = ReactDOM.createRoot(document.getElementById('root'));
+        raiz.render(<App />);
+
+    </script>
+
+</body>
+
+</html>
